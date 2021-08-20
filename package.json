@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon app.js",
-    "dev": "concurrently --kill-others \"pnpm start\" \"cd client && pnpm start\"",
+    "start": "node app.js",
+    "install-all": "pnpm install && cd client && pnpm install",
+    "dev": "concurrently --kill-others 'nodemon app.js -- -d' 'cd client && pnpm start'",
     "build": "cd client && pnpm build"
   },
   "dependencies": {
+    "argparse": "^2.0.1",
     "cors": "^2.8.5",
-    "express": "~4.16.4",
+    "express": "^4.16.4",
     "express-fileupload": "^1.2.1",
     "ip": "^1.1.5",
     "morgan": "^1.10.0",
