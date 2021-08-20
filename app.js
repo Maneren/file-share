@@ -9,8 +9,12 @@ const morgan = require('morgan');
 const app = express();
 const port = 5000;
 
-const buildFolder = path.join(__dirname, 'build');
+const buildFolder = path.join(__dirname, 'client', 'build');
 const sharedFolder = path.join(__dirname, 'shared');
+
+if (!fs.existsSync(buildFolder)) {
+  fs.mkdirSync(buildFolder);
+}
 
 app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder));
