@@ -13,7 +13,7 @@ const getExtension = filename => {
 
 const Item = ({ name }) => (
   <div className={cls('file')}>
-    <a href={`/files/${name}`} className={cls('link')}>
+    <a href={`/files/${name}`} className={cls('link')} download>
       <Ratio aspectRatio='1x1'>
         <img
           alt='file icon'
