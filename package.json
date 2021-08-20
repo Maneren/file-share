@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "install-all": "pnpm install && cd client && pnpm install",
+    "install-app": "pnpm install && cd client && pnpm install && pnpm build",
     "dev": "concurrently --kill-others 'nodemon app.js -- -d' 'cd client && pnpm start'",
     "build": "cd client && pnpm build"
   },
