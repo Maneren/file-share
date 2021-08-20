@@ -51,7 +51,11 @@ app.get('/file-list', (req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+  const qrcode = require('qrcode-terminal');
+  const ip = require('ip');
+  const address = `http://${ip.address()}:${port}`;
+  qrcode.generate(address, { small: true });
+  console.log(`Listening at ${address}`);
 });
 
 // TODO: add cli

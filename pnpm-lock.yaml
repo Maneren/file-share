@@ -5,15 +5,19 @@ specifiers:
   cors: ^2.8.5
   express: ~4.16.4
   express-fileupload: ^1.2.1
+  ip: ^1.1.5
   morgan: ^1.10.0
   nodemon: ^2.0.12
+  qrcode-terminal: ^0.12.0
   semistandard: ^16.0.1
 
 dependencies:
   cors: 2.8.5
   express: 4.16.4
   express-fileupload: 1.2.1
+  ip: 1.1.5
   morgan: 1.10.0
+  qrcode-terminal: 0.12.0
 
 devDependencies:
   concurrently: 6.2.1
@@ -1280,6 +1284,10 @@ packages:
       side-channel: 1.0.4
     dev: true
 
+  /ip/1.1.5:
+    resolution: {integrity: sha1-vd7XARQpCCjAoDnnLvJfWq7ENUo=}
+    dev: false
+
   /ipaddr.js/1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -1997,6 +2005,11 @@ packages:
     dependencies:
       escape-goat: 2.1.1
     dev: true
+
+  /qrcode-terminal/0.12.0:
+    resolution: {integrity: sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==}
+    hasBin: true
+    dev: false
 
   /qs/6.5.2:
     resolution: {integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==}
