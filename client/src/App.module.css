@@ -1,0 +1,12 @@
+.App {
+  background-color: var(--back-color);
+  color: var(--text-color);
+
+  font-weight: 600;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}

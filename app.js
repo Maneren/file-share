@@ -1,58 +1,57 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
-// const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const app = express();
 const port = 5000;
 
-app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, 'public') });
-});
+const buildFolder = path.join(__dirname, 'build');
+const sharedFolder = path.join(__dirname, 'shared');
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
-app.use('/files', express.static(path.join(__dirname, 'shared')));
+app.use('/', express.static(buildFolder));
+app.use('/files', express.static(sharedFolder));
 
-// allow upload
-app.use(fileUpload({
-  createParentPath: true
-}));
+// enable upload
+app.use(fileUpload({ createParentPath: true }));
 
 // other middleware
 app.use(cors());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.post('/upload', (req, res) => {
   try {
-    if (!req.files) {
-      return res.send('No file uploaded');
+    const { files } = req;
+    if (!files?.uploads) {
+      return res.status(400).redirect(`/?error=${encodeURIComponent('No files selected')}`);
     }
 
-    const file = req.files.file;
-    const { name, size } = file;
-
-    // Use the mv() method to place the file in upload directory
-    file.mv(path.join(__dirname, 'shared', name));
-
-    // send response
-    res.send({
-      status: true,
-      message: 'File is uploaded',
-      data: {
-        name: name,
-        size: size
-      }
+    files.uploads.forEach((file) => {
+      const { name } = file;
+      file.mv(path.join(sharedFolder, name));
     });
+
+    res.redirect('/?error=none');
   } catch (err) {
-    res.status(500).send(err);
+    console.error(err);
+    res.status(500).redirect(`/?error=${encodeURIComponent(err)}`);
+  }
+});
+
+app.get('/file-list', (req, res, next) => {
+  try {
+    res.send(fs.readdirSync(sharedFolder));
+  } catch (err) {
+    console.error(err);
+    res.status(500).redirect(`/?error=${encodeURIComponent(err)}`);
   }
 });
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });
+
+// TODO: add cli

@@ -1,0 +1,44 @@
+.file {
+  --column-count: 12;
+  --max-width: 110px;
+}
+
+@media only screen and (max-width: 768px) {
+  .file {
+    --column-count: 8;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .file {
+    --column-count: 4;
+  }
+}
+
+.file {
+  text-align: center;
+  --window-width: calc(100vw - var(--scrollbar-width));
+  --width-helper: calc(var(--window-width) / var(--column-count));
+  --width: min(var(--width-helper), var(--max-width));
+
+  width: var(--width);
+  height: calc(1.8 * var(--width));
+
+  overflow: hidden;
+}
+
+.icon {
+  padding: 10px;
+}
+
+.link {
+  display: block;
+  text-decoration: none;
+}
+
+.name {
+  font-size: 1rem;
+  padding: 0 10%;
+  color: var(--text-color);
+  word-wrap: break-word;
+}

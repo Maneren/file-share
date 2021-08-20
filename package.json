@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "start": "nodemon app.js",
-    "dev": "concurrently --kill-others \"pnpm start\" \"cd client && pnpm start\""
+    "dev": "concurrently --kill-others \"pnpm start\" \"cd client && pnpm start\"",
+    "build": "cd client && pnpm build"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "~4.16.4",
     "express-fileupload": "^1.2.1",

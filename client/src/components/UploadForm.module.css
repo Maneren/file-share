@@ -1,0 +1,19 @@
+.upload-form {
+  padding: 10px 5vw;
+  width: 100%;
+  max-width: 800px;
+}
+
+.upload-form * {
+  margin: 3px 0;
+}
+
+.input {
+  background-color: var(--back-color);
+  color: var(--text-color);
+}
+
+.input:focus {
+  background-color: var(--back-color);
+  color: var(--text-color);
+}
