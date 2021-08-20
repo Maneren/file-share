@@ -7,7 +7,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 const app = express();
-const port = 5000;
 
 const buildFolder = path.join(__dirname, 'client', 'build');
 const sharedFolder = path.join(__dirname, 'shared');
@@ -54,9 +53,11 @@ app.get('/file-list', (req, res, next) => {
   }
 });
 
-app.listen(port, () => {
+const server = app.listen(0, () => {
   const qrcode = require('qrcode-terminal');
   const ip = require('ip');
+
+  const port = server.address().port;
   const address = `http://${ip.address()}:${port}`;
   qrcode.generate(address, { small: true });
   console.log(`Listening at ${address}`);
