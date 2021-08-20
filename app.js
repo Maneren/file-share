@@ -24,7 +24,7 @@ if (!fs.existsSync(sharedFolder)) {
 
 if (!fs.existsSync(buildFolder) || !fs.readdirSync(buildFolder).includes('index.html')) {
   console.log('Couldn\'t find index.html. Try rebuilding the client');
-  require('process').exit(1);
+  process.exit(1);
 }
 
 app.use('/', express.static(buildFolder));
@@ -36,7 +36,7 @@ app.use(require('morgan')('dev'));
 
 app.post('/upload', ({ files }, res) => {
   try {
-    if (!files?.uploads) {
+    if (!files || !files.uploads) {
       return res.status(400).redirect(`/?error=${encodeURIComponent('No files selected')}`);
     }
 
