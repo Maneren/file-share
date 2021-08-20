@@ -28,7 +28,7 @@ if (!fs.existsSync(buildFolder) || !fs.readdirSync(buildFolder).includes('index.
 }
 
 app.use('/', express.static(buildFolder));
-app.use('/files', express.static(sharedFolder));
+app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
 app.use(require('express-fileupload')());
 app.use(require('cors')());
@@ -54,7 +54,11 @@ app.post('/upload', ({ files }, res) => {
 
 app.get('/file-list', (req, res, next) => {
   try {
-    res.send(fs.readdirSync(sharedFolder));
+    // TODO: allow dirs - requires client changes
+    const files = fs
+      .readdirSync(sharedFolder)
+      .filter(item => fs.lstatSync(path.join(sharedFolder, item)).isFile());
+    res.send(files);
   } catch (err) {
     console.error(err);
     res.status(500).redirect(`/?error=${encodeURIComponent(err)}`);
