@@ -1,5 +1,5 @@
 import styles from './Item.module.css';
-import getIcon from '../assets/file-icons';
+import { getIcon, icons } from '../assets/icons';
 
 import { Ratio } from 'react-bootstrap';
 
@@ -11,9 +11,9 @@ const getExtension = filename => {
   return ext == null ? '' : ext[1];
 };
 
-const Item = ({ name }) => (
-  <div className={cls('file')}>
-    <a href={`/files/${name}`} className={cls('link')} download>
+const File = ({ name, path }) => (
+  <div className={cls('item file')}>
+    <a href={`/files${path}/${name}`} className={cls('link')} download>
       <Ratio aspectRatio='1x1'>
         <img
           alt='file icon'
@@ -26,4 +26,19 @@ const Item = ({ name }) => (
   </div>
 );
 
-export default Item;
+const Folder = ({ name, path, onClick, icon }) => (
+  <div className={cls('item folder')}>
+    <span className={cls('link')} onClick={onClick}>
+      <Ratio aspectRatio='1x1'>
+        <img
+          alt='folder icon'
+          className={cls('icon')}
+          src={icons[icon]}
+        />
+      </Ratio>
+      <div className={cls('name')}>{name}</div>
+    </span>
+  </div>
+);
+
+export { File, Folder };

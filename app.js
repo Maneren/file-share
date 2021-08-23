@@ -27,17 +27,17 @@ if (!fs.existsSync(buildFolder) || !fs.readdirSync(buildFolder).includes('index.
   process.exit(1);
 }
 
-app.use('/', express.static(buildFolder));
-app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
-
 app.use(require('express-fileupload')());
 app.use(require('cors')());
 app.use(require('morgan')('dev'));
 
+app.use('/', express.static(buildFolder));
+app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
+
 app.post('/upload', ({ files }, res) => {
   try {
     if (!files || !files.uploads) {
-      return res.status(400).redirect(`/?error=${encodeURIComponent('No files selected')}`);
+      return res.send({ error: 'No files selected' });
     }
 
     files.uploads.forEach((file) => {
@@ -48,20 +48,38 @@ app.post('/upload', ({ files }, res) => {
     res.redirect('/?error=none');
   } catch (err) {
     console.error(err);
-    res.status(500).redirect(`/?error=${encodeURIComponent(err)}`);
+    res.send({ error: 'Internal error' });
   }
 });
 
-app.get('/file-list', (req, res, next) => {
+app.get('/list', async (req, res) => {
   try {
-    // TODO: allow dirs - requires client changes
-    const files = fs
-      .readdirSync(sharedFolder)
-      .filter(item => fs.lstatSync(path.join(sharedFolder, item)).isFile());
-    res.send(files);
+    const folder = path.join(sharedFolder, req.query.path);
+    console.log('path', folder);
+    console.log('req', req.query);
+
+    if (!fs.existsSync(folder)) {
+      return res.send({ error: 'Folder does not exist' });
+    }
+
+    const contents = await fs
+      .promises
+      .readdir(folder);
+
+    const files = contents.filter(item => fs
+      .lstatSync(path.join(folder, item))
+      .isFile()
+    );
+
+    const folders = contents.filter(item => fs
+      .lstatSync(path.join(folder, item))
+      .isDirectory()
+    );
+
+    res.send({ files, folders });
   } catch (err) {
     console.error(err);
-    res.status(500).redirect(`/?error=${encodeURIComponent(err)}`);
+    res.send({ error: 'Internal error' });
   }
 });
 
@@ -71,10 +89,7 @@ if (argv.dev) {
   const port = 5000;
   app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
 } else {
-  let port = 0;
-  if (argv.port) {
-    port = argv.port;
-  }
+  const port = argv.port !== undefined ? argv.port : 0; // port 0 = OS chooses random free port
 
   const server = app.listen(port, () => {
     const { port } = server.address();

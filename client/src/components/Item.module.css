@@ -1,4 +1,4 @@
-.file {
+.item {
   --column-count: 12;
   --max-width: 110px;
 }
@@ -15,7 +15,7 @@
   }
 }
 
-.file {
+.item {
   text-align: center;
   --window-width: calc(100vw - var(--scrollbar-width));
   --width-helper: calc(var(--window-width) / var(--column-count));

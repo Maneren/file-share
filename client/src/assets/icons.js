@@ -1,5 +1,5 @@
 import { React as ReactUtils } from 'my-utils';
-const icons = ReactUtils.importAll(require.context('./file-icons', false, /\.svg$/), false);
+const icons = ReactUtils.importAll(require.context('./icons', false, /\.svg$/), false);
 
 const table = {
   apk: 'android',
@@ -59,4 +59,4 @@ const table = {
 
 const getIcon = extension => icons[extension] ? icons[extension] : table[extension] ? icons[table[extension]] : icons.file;
 
-export default getIcon;
+export { getIcon, icons };
