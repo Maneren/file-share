@@ -1,9 +1,9 @@
 import styles from './FileList.module.css';
 import { File, Folder } from './Item';
 
+import axios from 'axios';
 import { useState } from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal } from 'react-bootstrap';
 
 import { React as ReactUtils, General } from 'my-utils';
@@ -39,9 +39,11 @@ const FileList = () => {
     setLoadState({ loading: true, loaded: false });
 
     const start = Date.now();
-    window.fetch(`/list?path=./${pathString}`, { headers: { accept: 'application/json' } })
+
+    axios
+      .request(`/list?path=./${pathString}`, { headers: { accept: 'application/json' } })
       .then(async response => {
-        const data = await response.json();
+        const { data } = response;
 
         const { error } = data;
         if (error) {

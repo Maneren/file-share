@@ -2,20 +2,20 @@ lockfileVersion: 5.3
 
 specifiers:
   '@popperjs/core': ^2.9.3
+  axios: ^0.21.1
   bootstrap: 5.1.0
   my-utils: github:Maneren/my-utils#v1.0.0
   react: ^17.0.2
-  react-async: ^10.0.1
   react-bootstrap: ^2.0.0-beta.5
   react-dom: ^17.0.2
   react-scripts: 4.0.3
 
 dependencies:
   '@popperjs/core': 2.9.3
+  axios: 0.21.1
   bootstrap: 5.1.0_@popperjs+core@2.9.3
   my-utils: github.com/Maneren/my-utils/d14df2b748333b15aae31dc3e9433b4b464186c5
   react: 17.0.2
-  react-async: 10.0.1_react@17.0.2
   react-bootstrap: 2.0.0-beta.5_react-dom@17.0.2+react@17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-scripts: 4.0.3_react@17.0.2
@@ -2927,6 +2927,14 @@ packages:
   /axe-core/4.3.2:
     resolution: {integrity: sha512-5LMaDRWm8ZFPAEdzTYmgjjEdj1YnQcpfrVajO/sn/LhbpGp0Y0H64c2hLZI1gRMxfA+w1S71Uc/nHaOXgcCvGg==}
     engines: {node: '>=4'}
+    dev: false
+
+  /axios/0.21.1:
+    resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
+    dependencies:
+      follow-redirects: 1.14.1_debug@4.3.2
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /axobject-query/2.2.0:
@@ -9333,14 +9341,6 @@ packages:
       raf: 3.4.1
       regenerator-runtime: 0.13.9
       whatwg-fetch: 3.6.2
-    dev: false
-
-  /react-async/10.0.1_react@17.0.2:
-    resolution: {integrity: sha512-ORUz5ca0B57QgBIzEZM5SuhJ6xFjkvEEs0gylLNlWf06vuVcLZsjIw3wx58jJkZG38p+0nUAxRgFW2b7mnVZzA==}
-    peerDependencies:
-      react: '>=16.3.1'
-    dependencies:
-      react: 17.0.2
     dev: false
 
   /react-bootstrap/2.0.0-beta.5_react-dom@17.0.2+react@17.0.2:

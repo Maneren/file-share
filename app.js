@@ -27,7 +27,10 @@ if (!fs.existsSync(buildFolder) || !fs.readdirSync(buildFolder).includes('index.
   process.exit(1);
 }
 
-app.use(require('express-fileupload')());
+app.use(require('express-fileupload')({
+  useTempFiles: true,
+  tempFileDir: '/tmp/express-fileupload'
+}));
 app.use(require('cors')());
 app.use(require('morgan')('dev'));
 
@@ -36,23 +39,19 @@ app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
 app.post('/upload', ({ files }, res) => {
   try {
-    if (!files || !files.uploads) {
-      return res.send({ error: 'No files selected' });
+    if (!files) {
+      return res.send({ error: 'No files uploaded' });
     }
 
-    if (!(files.uploads instanceof Array)) {
-      const file = files.uploads;
-      const { name } = file;
+    for (const name in files) {
+      const file = files[name];
+
+      console.log(name, file.size);
+
       file.mv(path.join(sharedFolder, name));
-      return res.redirect('/?error=none');
     }
 
-    files.uploads.forEach((file) => {
-      const { name } = file;
-      file.mv(path.join(sharedFolder, name));
-    });
-
-    res.redirect('/?error=none');
+    res.send({});
   } catch (err) {
     console.error(err);
     res.send({ error: 'Internal error' });

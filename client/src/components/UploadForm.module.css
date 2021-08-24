@@ -17,3 +17,16 @@
   background-color: var(--back-color);
   color: var(--text-color);
 }
+
+.progress-container {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress {
+  width: 50vw;
+}

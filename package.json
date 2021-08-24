@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "install-app": "pnpm install && cd client && pnpm install && pnpm build",
-    "dev": "concurrently --kill-others 'nodemon app.js -- -d' 'cd client && pnpm start'",
+    "dev": "nodemon app.js -- -d",
     "build": "cd client && pnpm build"
   },
   "dependencies": {
@@ -18,7 +18,6 @@
     "qrcode-terminal": "^0.12.0"
   },
   "devDependencies": {
-    "concurrently": "^6.2.1",
     "nodemon": "^2.0.12",
     "semistandard": "^16.0.1"
   }
