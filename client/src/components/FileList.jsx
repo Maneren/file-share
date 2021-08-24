@@ -33,7 +33,7 @@ const FileList = () => {
 
   const { loading, loaded } = loadState;
 
-  const pathString = path.join('/');
+  const pathString = encodeURIComponent(path.join('/'));
 
   if (!loading && !loaded) {
     setLoadState({ loading: true, loaded: false });
