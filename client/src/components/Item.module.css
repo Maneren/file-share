@@ -4,13 +4,13 @@
 }
 
 @media only screen and (max-width: 768px) {
-  .file {
+  .item {
     --column-count: 8;
   }
 }
 
 @media only screen and (max-width: 425px) {
-  .file {
+  .item {
     --column-count: 4;
   }
 }
