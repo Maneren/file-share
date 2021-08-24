@@ -10,12 +10,12 @@ const parser = new ArgumentParser({
 parser.add_argument('-d', '--dev', { action: 'store_true', help: 'run in dev mode' });
 parser.add_argument('-q', '--qr', { action: 'store_true', help: 'show qr code' });
 parser.add_argument('-p', '--port', { type: 'int' });
-parser.add_argument('folder', { nargs: '?', default: path.join(__dirname, 'shared'), help: 'shared folder' });
+parser.add_argument('folder', { nargs: '?', default: '/home/paul' /* path.join(__dirname, 'shared') */, help: 'shared folder' });
 
 const app = express();
 const argv = parser.parse_args();
 
-const sharedFolder = argv.folder;
+const sharedFolder = fs.realpathSync(argv.folder);
 const buildFolder = path.join(__dirname, 'client', 'build');
 
 if (!fs.existsSync(sharedFolder)) {
@@ -55,26 +55,31 @@ app.post('/upload', ({ files }, res) => {
 app.get('/list', async (req, res) => {
   try {
     const folder = path.join(sharedFolder, req.query.path);
-    console.log('path', folder);
-    console.log('req', req.query);
 
     if (!fs.existsSync(folder)) {
       return res.send({ error: 'Folder does not exist' });
     }
 
-    const contents = await fs
-      .promises
-      .readdir(folder);
+    const contents = await fs.promises.readdir(folder);
 
-    const files = contents.filter(item => fs
-      .lstatSync(path.join(folder, item))
-      .isFile()
-    );
+    const files = [];
+    const folders = [];
 
-    const folders = contents.filter(item => fs
-      .lstatSync(path.join(folder, item))
-      .isDirectory()
-    );
+    for (const item of contents) {
+      const absolutePath = path.join(folder, item);
+      let stats = await fs.promises.lstat(absolutePath);
+
+      if (stats.isSymbolicLink()) {
+        const realPath = await fs.promises.readlink(absolutePath);
+        stats = await fs.promises.lstat(realPath);
+      }
+
+      if (stats.isFile()) {
+        files.push(item);
+      } else if (stats.isDirectory()) {
+        folders.push(item);
+      }
+    }
 
     res.send({ files, folders });
   } catch (err) {
@@ -97,7 +102,7 @@ if (argv.dev) {
 
     const address = `http://${ip}:${port}`;
 
-    require('qrcode-terminal').generate(address, { small: true });
+    if (argv.qr) require('qrcode-terminal').generate(address, { small: true });
 
     console.log(`Listening at ${address}`);
   });
