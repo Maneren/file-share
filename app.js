@@ -60,7 +60,11 @@ app.post('/upload', ({ files }, res) => {
 
 app.get('/list', async (req, res) => {
   try {
-    const folder = path.join(sharedFolder, req.query.path);
+    const folder = fs.realpathSync(path.join(sharedFolder, req.query.path));
+
+    if (req.query.path.includes('..')) {
+      return res.send({ error: 'Invalid query' });
+    }
 
     if (!fs.existsSync(folder)) {
       return res.send({ error: 'Folder does not exist' });
