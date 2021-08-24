@@ -10,7 +10,7 @@ const parser = new ArgumentParser({
 parser.add_argument('-d', '--dev', { action: 'store_true', help: 'run in dev mode' });
 parser.add_argument('-q', '--qr', { action: 'store_true', help: 'show qr code' });
 parser.add_argument('-p', '--port', { type: 'int' });
-parser.add_argument('folder', { nargs: '?', default: '/home/paul' /* path.join(__dirname, 'shared') */, help: 'shared folder' });
+parser.add_argument('folder', { nargs: '?', default: path.join(__dirname, 'shared'), help: 'shared folder' });
 
 const app = express();
 const argv = parser.parse_args();
@@ -38,6 +38,13 @@ app.post('/upload', ({ files }, res) => {
   try {
     if (!files || !files.uploads) {
       return res.send({ error: 'No files selected' });
+    }
+
+    if (!(files.uploads instanceof Array)) {
+      const file = files.uploads;
+      const { name } = file;
+      file.mv(path.join(sharedFolder, name));
+      return res.redirect('/?error=none');
     }
 
     files.uploads.forEach((file) => {
