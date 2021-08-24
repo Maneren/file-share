@@ -27,17 +27,19 @@ const FileList = () => {
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState([false, false]);
 
-  const [path, setPath] = useState('.');
+  const [path, setPath] = useState([]);
   const [data, setData] = useState(null);
   const [loadState, setLoadState] = useState({ loading: false, loaded: false });
 
   const { loading, loaded } = loadState;
 
+  const pathString = path.join('/');
+
   if (!loading && !loaded) {
     setLoadState({ loading: true, loaded: false });
 
     const start = Date.now();
-    window.fetch(`/list?path=${path}`, { headers: { accept: 'application/json' } })
+    window.fetch(`/list?path=./${pathString}`, { headers: { accept: 'application/json' } })
       .then(async response => {
         const data = await response.json();
 
@@ -75,8 +77,8 @@ const FileList = () => {
 
   const folderClickHandler = (name, back) => {
     const newPath = back
-      ? path.split('/').slice(0, -1).join('/')
-      : `${path}/${name}`;
+      ? path.slice(0, -1)
+      : path.concat([name]);
 
     setPath(newPath);
     setLoadState({ loading: false, loaded: false });
@@ -85,7 +87,7 @@ const FileList = () => {
   const { files, folders } = data;
   return (
     <div className={cls('file-view')}>
-      {path !== '.'
+      {path.length > 0
         ? <Folder
             key='folder-back'
             name='back'
@@ -100,12 +102,12 @@ const FileList = () => {
           name={name}
           icon='folder'
           onClick={() => folderClickHandler(name, false)}
-          path={path}
+          path={pathString}
         />
       ))}
 
       {files.map((name) => (
-        <File key={`file-${name}`} name={name} path={path} />
+        <File key={`file-${name}`} name={name} path={pathString} />
       ))}
     </div>
   );
