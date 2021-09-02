@@ -12,7 +12,7 @@ const formatBytes = (bytes, decimals = 2) => {
   decimals = Math.max(0, decimals);
 
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
 
   const i = Math.floor(Math.log(bytes) / Math.log(k)); // = floor(log_k(bytes))
 
@@ -25,17 +25,21 @@ const formatBytes = (bytes, decimals = 2) => {
 const UploadForm = () => {
   const [files, setFiles] = useState({});
 
-  const [uploadStats, setUploadStats] = useState({ total: 0, loaded: 0 });
+  const [uploadStats, setUploadStats] = useState({ total: 0, loaded: 0, start: Date.now(), elapsed: 0 });
 
   const handleFileChange = e => {
     setFiles(e.target.files);
   };
+
+  const { start } = uploadStats;
 
   const handleFormSubmit = async e => {
     e.preventDefault();
 
     const formData = new window.FormData();
     for (const file of files) formData.append(file.name, file);
+
+    const start = Date.now();
 
     axios
       .request({
@@ -44,7 +48,7 @@ const UploadForm = () => {
         data: formData,
         headers: { accept: 'application/json' },
         onUploadProgress: p =>
-          setUploadStats({ total: p.total, loaded: p.loaded })
+          setUploadStats({ total: p.total, loaded: p.loaded, start })
       })
       .then(response => {
         // TODO: handle upload response
@@ -52,6 +56,7 @@ const UploadForm = () => {
   };
 
   const { total, loaded } = uploadStats;
+  const speed = loaded / ((Date.now() - start) / 1000);
   return (
     <>
       <form className={cls('upload-form')} onSubmit={handleFormSubmit}>
@@ -77,7 +82,7 @@ const UploadForm = () => {
         ? (
           <div className={cls('progress-container')}>
             <p>
-              Upload: {formatBytes(loaded)} of {formatBytes(total)}
+              Upload: {formatBytes(loaded)} of {formatBytes(total)} ({formatBytes(speed)}/s)
             </p>
             <progress className={cls('progress')} value={loaded} max={total} />
           </div>
