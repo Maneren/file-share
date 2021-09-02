@@ -7,10 +7,20 @@ const parser = new ArgumentParser({
   description: 'Simple file sharing server'
 });
 
-parser.add_argument('-d', '--dev', { action: 'store_true', help: 'run in dev mode' });
-parser.add_argument('-q', '--qr', { action: 'store_true', help: 'show qr code' });
+parser.add_argument('-d', '--dev', {
+  action: 'store_true',
+  help: 'run in dev mode'
+});
+parser.add_argument('-q', '--qr', {
+  action: 'store_true',
+  help: 'show qr code'
+});
 parser.add_argument('-p', '--port', { type: 'int' });
-parser.add_argument('folder', { nargs: '?', default: path.join(__dirname, 'shared'), help: 'shared folder' });
+parser.add_argument('folder', {
+  nargs: '?',
+  default: path.join(__dirname, 'shared'),
+  help: 'shared folder'
+});
 
 const app = express();
 const argv = parser.parse_args();
@@ -22,15 +32,20 @@ if (!fs.existsSync(sharedFolder)) {
   fs.mkdirSync(sharedFolder);
 }
 
-if (!fs.existsSync(buildFolder) || !fs.readdirSync(buildFolder).includes('index.html')) {
-  console.log('Couldn\'t find index.html. Try rebuilding the client');
+if (
+  !fs.existsSync(buildFolder) ||
+  !fs.readdirSync(buildFolder).includes('index.html')
+) {
+  console.log("Couldn't find index.html. Try rebuilding the client");
   process.exit(1);
 }
 
-app.use(require('express-fileupload')({
-  useTempFiles: true,
-  tempFileDir: '/tmp/express-fileupload'
-}));
+app.use(
+  require('express-fileupload')({
+    useTempFiles: true,
+    tempFileDir: '/tmp/express-fileupload'
+  })
+);
 app.use(require('cors')());
 app.use(require('morgan')('dev'));
 
@@ -108,7 +123,20 @@ if (argv.dev) {
 
   const server = app.listen(port, () => {
     const { port } = server.address();
-    const ip = require('ip').address('public');
+
+    const interfaces = require('os').networkInterfaces();
+    const interfacesNames = Object.keys(interfaces);
+
+    let ip = null;
+    for (const keyword of ['eth', 'wlan', 'lan', 'tun', 'lo', '\\w*']) {
+      const regex = new RegExp(`^${keyword}\\d+$`);
+      const name = interfacesNames.find(ifc => regex.test(ifc));
+
+      if (name === undefined) continue;
+
+      ip = interfaces[name][0].address;
+      break;
+    }
 
     const address = `http://${ip}:${port}`;
 
