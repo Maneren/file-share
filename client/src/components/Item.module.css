@@ -22,7 +22,7 @@
   --width: min(var(--width-helper), var(--max-width));
 
   width: var(--width);
-  height: calc(1.8 * var(--width));
+  height: calc(2 * var(--width));
 
   overflow: hidden;
 }
