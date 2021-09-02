@@ -55,13 +55,29 @@ app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 app.post('/upload', ({ files }, res) => {
   try {
     if (!files) {
-      return res.send({ error: 'No files uploaded' });
+      const error = 'No files uploaded';
+      console.error(error);
+      return res.send({ error });
     }
+
+    const formatBytes = (bytes, decimals = 2) => {
+      decimals = Math.max(0, decimals);
+
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+      const i = Math.floor(Math.log(bytes) / Math.log(k)); // = floor(log_k(bytes))
+
+      const number = parseFloat((bytes / Math.pow(k, i)).toFixed(decimals));
+      const unit = sizes[i];
+
+      return `${number} ${unit}`;
+    };
 
     for (const name in files) {
       const file = files[name];
 
-      console.log(name, file.size);
+      console.log(name, formatBytes(file.size));
 
       file.mv(path.join(sharedFolder, name));
     }
@@ -73,16 +89,20 @@ app.post('/upload', ({ files }, res) => {
   }
 });
 
-app.get('/list', async (req, res) => {
+app.get('/list', async ({ query }, res) => {
   try {
-    const folder = fs.realpathSync(path.join(sharedFolder, req.query.path));
-
-    if (req.query.path.includes('..')) {
-      return res.send({ error: 'Invalid query' });
+    if (query.path.includes('..')) {
+      const error = `Forbidden path: ${query.path}`;
+      console.error(error);
+      return res.send({ error });
     }
 
+    const folder = fs.realpathSync(path.join(sharedFolder, query.path));
+
     if (!fs.existsSync(folder)) {
-      return res.send({ error: 'Folder does not exist' });
+      const error = 'Folder does not exist';
+      console.error(error);
+      return res.send({ error });
     }
 
     const contents = await fs.promises.readdir(folder);
@@ -130,7 +150,7 @@ if (argv.dev) {
     let ip = null;
     for (const keyword of ['eth', 'wlan', 'lan', 'tun', 'lo', '\\w*']) {
       const regex = new RegExp(`^${keyword}\\d+$`);
-      const name = interfacesNames.find(ifc => regex.test(ifc));
+      const name = interfacesNames.find((ifc) => regex.test(ifc));
 
       if (name === undefined) continue;
 
