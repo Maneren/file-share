@@ -52,6 +52,7 @@ app.use(require('morgan')('dev'));
 app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
+const { formatBytes, getFolderContents } = require('./utils');
 app.post('/upload', ({ files }, res) => {
   try {
     if (!files) {
@@ -59,20 +60,6 @@ app.post('/upload', ({ files }, res) => {
       console.error(error);
       return res.send({ error });
     }
-
-    const formatBytes = (bytes, decimals = 2) => {
-      decimals = Math.max(0, decimals);
-
-      const k = 1024;
-      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-      const i = Math.floor(Math.log(bytes) / Math.log(k)); // = floor(log_k(bytes))
-
-      const number = parseFloat((bytes / Math.pow(k, i)).toFixed(decimals));
-      const unit = sizes[i];
-
-      return `${number} ${unit}`;
-    };
 
     for (const name in files) {
       const file = files[name];
@@ -105,26 +92,7 @@ app.get('/list', async ({ query }, res) => {
       return res.send({ error });
     }
 
-    const contents = await fs.promises.readdir(folder);
-
-    const files = [];
-    const folders = [];
-
-    for (const item of contents) {
-      const absolutePath = path.join(folder, item);
-      let stats = await fs.promises.lstat(absolutePath);
-
-      if (stats.isSymbolicLink()) {
-        const realPath = await fs.promises.readlink(absolutePath);
-        stats = await fs.promises.lstat(realPath);
-      }
-
-      if (stats.isFile()) {
-        files.push(item);
-      } else if (stats.isDirectory()) {
-        folders.push(item);
-      }
-    }
+    const { files, folders } = await getFolderContents(folder);
 
     res.send({ files, folders });
   } catch (err) {
