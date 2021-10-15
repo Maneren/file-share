@@ -148,14 +148,19 @@ if (argv.dev) {
     const interfacesNames = Object.keys(interfaces);
 
     let ip = null;
-    for (const keyword of ['eth', 'wlan', 'lan', 'tun', 'lo', '\\w*']) {
-      const regex = new RegExp(`^${keyword}\\d+$`);
+    for (const keyword of ['eth', 'w', 'lan', 'tun', '']) {
+      const regex = new RegExp(`^${keyword}.+$`);
       const name = interfacesNames.find((ifc) => regex.test(ifc));
 
       if (name === undefined) continue;
 
       ip = interfaces[name][0].address;
       break;
+    }
+
+    if (ip === null) {
+      console.error('IP not found');
+      process.exit(1);
     }
 
     const address = `http://${ip}:${port}`;
