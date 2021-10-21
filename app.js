@@ -25,12 +25,12 @@ parser.add_argument('folder', {
 const app = express();
 const argv = parser.parse_args();
 
+if (!fs.existsSync(argv.folder)) {
+  fs.mkdirSync(argv.folder);
+}
+
 const sharedFolder = fs.realpathSync(argv.folder);
 const buildFolder = path.join(__dirname, 'client', 'build');
-
-if (!fs.existsSync(sharedFolder)) {
-  fs.mkdirSync(sharedFolder);
-}
 
 if (
   !fs.existsSync(buildFolder) ||
