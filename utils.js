@@ -1,5 +1,4 @@
-
-function formatBytes (bytes, decimals = 2) {
+function formatBytes(bytes, decimals = 2) {
   decimals = Math.max(0, decimals);
 
   const k = 1024;
@@ -13,34 +12,23 @@ function formatBytes (bytes, decimals = 2) {
   return `${number} ${unit}`;
 }
 
-async function getFolderContents (folder) {
+async function getFolderContents(folder) {
   const fs = require('fs');
-  const path = require('path');
+  const {
+    AsyncIter: {
+      AsyncIter: { fromSync },
+    },
+  } = require('@maneren/utils');
 
-  const contents = await fs.promises.readdir(folder);
+  const contents = await fs.promises.readdir(folder, { withFileTypes: true });
 
-  const files = [];
-  const folders = [];
+  const partitionedEntries = await fromSync(contents)
+    .filter((stat) => stat.isFile() || stat.isDirectory())
+    .partition((stat) => stat.isFile());
 
-  for (const item of contents) {
-    const absolutePath = path.join(folder, item);
-    let stats = await fs.promises.lstat(absolutePath);
-
-    if (stats.isSymbolicLink()) {
-      const realPath = await fs.promises.readlink(absolutePath);
-      stats = await fs.promises.lstat(realPath);
-    }
-
-    if (stats.isFile()) {
-      files.push(item);
-      continue;
-    }
-
-    if (stats.isDirectory()) {
-      folders.push(item);
-      continue;
-    }
-  }
+  const [files, folders] = partitionedEntries.map((entries) =>
+    entries.map((entry) => entry.name)
+  );
 
   return { files, folders };
 }

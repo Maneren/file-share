@@ -1,62 +1,68 @@
-import { React as ReactUtils } from 'my-utils';
-const icons = ReactUtils.importAll(require.context('./icons', false, /\.svg$/), false);
+import { ReactUtils } from "@maneren/utils";
 
-const table = {
-  apk: 'android',
+const icons = ReactUtils.importAll(
+  require.context("./icons", false, /\.svg$/),
+  false
+);
 
-  mp3: 'audio',
-  ogg: 'audio',
-  wav: 'audio',
-  flac: 'audio',
+const additional = {
+  apk: "android",
 
-  mp4: 'video',
-  mov: 'video',
-  mkv: 'video',
-  webm: 'video',
-  avi: 'video',
-  gif: 'video',
+  mp3: "audio",
+  ogg: "audio",
+  wav: "audio",
+  flac: "audio",
 
-  png: 'image',
-  jpg: 'image',
-  jpeg: 'image',
-  ico: 'image',
-  bmp: 'image',
-  webp: 'image',
+  mp4: "video",
+  mov: "video",
+  mkv: "video",
+  webm: "video",
+  avi: "video",
+  gif: "video",
 
-  doc: 'word',
-  docx: 'word',
-  odt: 'document',
-  rtf: 'document',
+  png: "image",
+  jpg: "image",
+  jpeg: "image",
+  ico: "image",
+  bmp: "image",
+  webp: "image",
 
-  xls: 'table',
-  xlsx: 'table',
+  doc: "word",
+  docx: "word",
+  odt: "document",
+  rtf: "document",
 
-  ppt: 'powerpoint',
-  pptx: 'powerpoint',
+  xls: "table",
+  xlsx: "table",
 
-  zip: 'archive',
-  rar: 'archive',
-  tar: 'archive',
-  '7z': 'archive',
+  ppt: "powerpoint",
+  pptx: "powerpoint",
 
-  conf: 'settings',
-  rc: 'settings',
+  zip: "archive",
+  rar: "archive",
+  tar: "archive",
+  "7z": "archive",
 
-  bat: 'console',
-  sh: 'console',
-  zsh: 'console',
+  conf: "settings",
+  rc: "settings",
 
-  jsx: 'react',
-  tsx: 'react',
+  bat: "console",
+  sh: "console",
+  zsh: "console",
 
-  gitignore: 'git',
+  jsx: "react",
+  tsx: "react",
 
-  ttf: 'font',
-  otf: 'font',
-  woff: 'font',
-  woff2: 'font'
+  gitignore: "git",
+
+  ttf: "font",
+  otf: "font",
+  woff: "font",
+  woff2: "font",
 };
 
-const getIcon = extension => icons[extension] ? icons[extension] : table[extension] ? icons[table[extension]] : icons.file;
+Object.entries(additional).forEach(([ext, icon]) => (icons[ext] = icons[icon]));
+
+const getIcon = (ext) => icons[ext] ?? icons.file;
 
 export { getIcon, icons };

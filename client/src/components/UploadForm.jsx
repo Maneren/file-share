@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { Col, Form, Row } from 'react-bootstrap';
 
-import { React as ReactUtils } from 'my-utils';
+import { ReactUtils } from '@maneren/utils';
 const cls = ReactUtils.classListBuilder(styles);
 
 const formatBytes = (bytes, decimals = 2) => {
