@@ -120,13 +120,15 @@ if (argv.dev) {
     const interfacesNames = Object.keys(interfaces);
 
     let ip = null;
-    for (const keyword of ['eth', 'w', 'lan', 'tun', '']) {
-      const name = interfacesNames.find((ifc) => ifc.startsWith(keyword));
+    for (const keyword of ['e', 'w', 'lan', 'tun', '[^(lo)]', '.+']) {
+      const name = interfacesNames.find((ifc) =>
+        ifc.match(new RegExp(`^${keyword}`))
+      );
 
-      if (name === undefined) continue;
-
-      ip = interfaces[name][0].address;
-      break;
+      if (name) {
+        ip = interfaces[name][0].address;
+        break;
+      }
     }
 
     if (ip === null) {
