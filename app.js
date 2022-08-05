@@ -30,13 +30,16 @@ if (!fs.existsSync(argv.folder)) {
 }
 
 const sharedFolder = fs.realpathSync(argv.folder);
-const buildFolder = path.join(__dirname, 'client', 'build');
+const clientFolder = path.join(__dirname, 'client');
+const buildFolder = path.join(clientFolder, 'build');
 
 if (
   !fs.existsSync(buildFolder) ||
   !fs.readdirSync(buildFolder).includes('index.html')
 ) {
-  console.log('Couldn\'t find index.html. Try rebuilding the client');
+  console.log(
+    `Couldn't find index.html. Try rebuilding the client in ${clientFolder}`
+  );
   process.exit(1);
 }
 
