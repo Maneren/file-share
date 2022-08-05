@@ -4,7 +4,7 @@ specifiers:
   '@babel/core': ^7.18.9
   '@babel/plugin-syntax-flow': ^7.18.6
   '@babel/plugin-transform-react-jsx': ^7.18.6
-  '@maneren/utils': ^6.0.0
+  '@maneren/utils': ^6.1.0
   '@popperjs/core': ^2.11.5
   axios: ^0.27.2
   bootstrap: ^5.2.0
@@ -19,7 +19,7 @@ dependencies:
   '@babel/core': 7.18.9
   '@babel/plugin-syntax-flow': 7.18.6_@babel+core@7.18.9
   '@babel/plugin-transform-react-jsx': 7.18.6_@babel+core@7.18.9
-  '@maneren/utils': 6.0.0
+  '@maneren/utils': 6.1.0
   '@popperjs/core': 2.11.5
   axios: 0.27.2
   bootstrap: 5.2.0_@popperjs+core@2.11.5
@@ -1949,8 +1949,8 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: false
 
-  /@maneren/utils/6.0.0:
-    resolution: {integrity: sha512-z++BI3u+DB5rKQaXC79F0u40CUq9vPmAEE2VVLyMKYfShh6VY3nuWZqMaHUZLYLJZr459h1MxqZCwg5DLK16Yw==}
+  /@maneren/utils/6.1.0:
+    resolution: {integrity: sha512-lLvbS9cCaXPRDu8OMrWHPtozyRgMdugkIU5Jg+Y7WZdgR6U8WdbOeKstv/fuGfyUI8EJUlc4JwDH7MsaabnqLQ==}
     dependencies:
       path-browserify: 1.0.1
     dev: false
