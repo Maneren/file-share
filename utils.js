@@ -1,16 +1,16 @@
-function formatBytes(bytes, decimals = 2) {
-  decimals = Math.max(0, decimals);
+const formatBytes = (bytes, precision = 3) => {
+  precision = Math.max(0, precision);
 
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
 
   const i = Math.floor(Math.log(bytes) / Math.log(k)); // = floor(log_k(bytes))
 
-  const number = parseFloat((bytes / Math.pow(k, i)).toFixed(decimals));
+  const number = parseFloat((bytes / Math.pow(k, i)).toPrecision(precision));
   const unit = sizes[i];
 
   return `${number} ${unit}`;
-}
+};
 
 async function getFolderContents(folder) {
   const fs = require('fs');
