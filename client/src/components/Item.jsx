@@ -16,7 +16,7 @@ const Icon = ({ icon, alt }) => (
 
 const File = ({ name, path }) => (
   <div className={cls("item file")}>
-    <a href={`${encodeURIComponent(path)}`} className={cls("link")} download>
+    <a href={`/files/${encodeURI(path)}`} className={cls("link")} download>
       <Icon alt="file icon" icon={getIcon(getExtension(name))} />
       <div className={cls("name")}>{name}</div>
     </a>
