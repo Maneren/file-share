@@ -6,10 +6,7 @@ import { Ratio } from "react-bootstrap";
 import { ReactUtils } from "@maneren/utils";
 const cls = ReactUtils.classListBuilder(styles);
 
-const getExtension = (filename) => {
-  const ext = /^.*\.([^.]+)$/.exec(filename.toLowerCase());
-  return ext === null ? "" : ext[1];
-};
+const getExtension = (filename) => filename.toLowerCase().split(".").pop();
 
 const Icon = ({ icon, alt }) => (
   <Ratio aspectRatio="1x1">
