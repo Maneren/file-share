@@ -25,7 +25,11 @@ const formatBytes = (bytes, precision = 3) => {
 const UploadForm = () => {
   const [files, setFiles] = useState({});
 
-  const [uploadStats, setUploadStats] = useState({ total: 0, loaded: 0, start: Date.now(), elapsed: 0 });
+  const [uploadStats, setUploadStats] = useState({
+    total: 0,
+    loaded: 0,
+    start: Date.now(),
+  });
 
   const handleFileChange = e => {
     setFiles(e.target.files);

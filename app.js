@@ -18,7 +18,7 @@ parser.add_argument('-q', '--qr', {
 parser.add_argument('-p', '--port', { type: 'int' });
 parser.add_argument('folder', {
   nargs: '?',
-  default: path.join(__dirname, 'shared'),
+  default: __dirname,
   help: 'shared folder',
 });
 
@@ -79,7 +79,6 @@ app.post('/upload', ({ files }, res) => {
   }
 });
 
-// TODO: query base64 encoding
 app.get('/list', async ({ query }, res) => {
   try {
     const queryPath = atob(query.path); // decode base64
@@ -88,7 +87,7 @@ app.get('/list', async ({ query }, res) => {
     if (queryPath.includes('..')) {
       const error = `Forbidden path: ${queryPath}`;
       console.error(error);
-      return res.send({ error });
+      return res.status(301).send(error);
     }
 
     const folder = fs.realpathSync(path.join(sharedFolder, queryPath));
@@ -96,7 +95,7 @@ app.get('/list', async ({ query }, res) => {
     if (!fs.existsSync(folder)) {
       const error = 'Folder does not exist';
       console.error(error);
-      return res.send({ error });
+      return res.status(404).send(error);
     }
 
     const { files, folders } = await getFolderContents(folder);
@@ -104,7 +103,7 @@ app.get('/list', async ({ query }, res) => {
     res.send({ files, folders });
   } catch (err) {
     console.error(err);
-    res.send({ error: 'Internal error' });
+    res.status(500).send('Internal error');
   }
 });
 
