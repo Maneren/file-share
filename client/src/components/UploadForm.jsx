@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 import { Col, Form, Row } from 'react-bootstrap';
 
-import { ReactUtils } from '@maneren/utils';
-const cls = ReactUtils.classListBuilder(styles);
+import { classListBuilder } from '@maneren/utils/react';
+const cls = classListBuilder(styles);
 
 const formatBytes = (bytes, precision = 3) => {
   precision = Math.max(0, precision);

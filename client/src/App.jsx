@@ -4,8 +4,8 @@ import UploadForm from './components/UploadForm';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { ReactUtils } from '@maneren/utils';
-const cls = ReactUtils.classListBuilder(styles);
+import { classListBuilder } from '@maneren/utils/react';
+const cls = classListBuilder(styles);
 
 const App = () => (
   <div className={cls('App')}>

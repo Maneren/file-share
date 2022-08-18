@@ -6,8 +6,9 @@ import { useState } from "react";
 
 import { Button, Modal } from "react-bootstrap";
 
-import { ReactUtils, General } from "@maneren/utils";
-const cls = ReactUtils.classListBuilder(styles);
+import { sleep } from '@maneren/utils/general'
+import { classListBuilder } from '@maneren/utils/react';
+const cls = classListBuilder(styles);
 
 const Error = ({ error, onClick }) => (
   <Modal show onHide={onClick}>
@@ -66,7 +67,7 @@ const FileList = () => {
         if (!files || !folders) return;
 
         if (Date.now() - start < 500) {
-          await General.sleep(200);
+          await sleep(200);
         }
 
         setData(data);
