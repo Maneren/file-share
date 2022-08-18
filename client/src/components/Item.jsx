@@ -3,8 +3,8 @@ import { getIcon, icons } from "../assets/icons";
 
 import { Ratio } from "react-bootstrap";
 
-import { ReactUtils } from "@maneren/utils";
-const cls = ReactUtils.classListBuilder(styles);
+import { classListBuilder } from '@maneren/utils/react';
+const cls = classListBuilder(styles);
 
 const getExtension = (filename) => {
   const ext = /^.*\.([^.]+)$/.exec(filename.toLowerCase());

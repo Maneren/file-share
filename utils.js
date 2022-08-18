@@ -14,20 +14,16 @@ function formatBytes(bytes, decimals = 2) {
 
 async function getFolderContents(folder) {
   const fs = require('fs');
-  const {
-    AsyncIter: {
-      AsyncIter: { fromSync },
-    },
-  } = require('@maneren/utils');
+  const { AsyncIter } = require('@maneren/utils/iterator.async');
 
   const contents = await fs.promises.readdir(folder, { withFileTypes: true });
 
-  const partitionedEntries = await fromSync(contents)
+  const [fileStats, folderStats] = await AsyncIter.fromSync(contents)
     .filter((stat) => stat.isFile() || stat.isDirectory())
     .partition((stat) => stat.isFile());
 
-  const [files, folders] = partitionedEntries.map((entries) =>
-    entries.map((entry) => entry.name)
+  const [files, folders] = [fileStats, folderStats].map(
+    (entries) => entries.map((entry) => entry.name)
   );
 
   return { files, folders };

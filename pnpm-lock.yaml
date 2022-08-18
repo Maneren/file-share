@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@maneren/utils': ^6.1.0
+  '@maneren/utils': 6.3.1
   argparse: ^2.0.1
   cors: ^2.8.5
   eslint: ^8.20.0
@@ -19,7 +19,7 @@ specifiers:
   semistandard: ^16.0.1
 
 dependencies:
-  '@maneren/utils': 6.1.0
+  '@maneren/utils': 6.3.1
   argparse: 2.0.1
   cors: 2.8.5
   express: 4.18.1
@@ -120,10 +120,8 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@maneren/utils/6.1.0:
-    resolution: {integrity: sha512-lLvbS9cCaXPRDu8OMrWHPtozyRgMdugkIU5Jg+Y7WZdgR6U8WdbOeKstv/fuGfyUI8EJUlc4JwDH7MsaabnqLQ==}
-    dependencies:
-      path-browserify: 1.0.1
+  /@maneren/utils/6.3.1:
+    resolution: {integrity: sha512-kwkf0csEM6TBu30zGXoUfXi7/PLZfJyuXa3PJYiQcs8YotrywM7vS5soj15aClYo0IOhZT7tE/Fu/nbHZVPJaA==}
     dev: false
 
   /@types/json5/0.0.29:
@@ -1864,10 +1862,6 @@ packages:
   /parseurl/1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
-    dev: false
-
-  /path-browserify/1.0.1:
-    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
     dev: false
 
   /path-exists/3.0.0:
