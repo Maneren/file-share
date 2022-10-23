@@ -9,9 +9,9 @@ import { useState } from 'react';
 const cls = classListBuilder(styles);
 
 const App = () => {
-  const [path, setPath] = useState(atob(sessionStorage.getItem('path') ?? ''));
+  const [path, setPath] = useState(sessionStorage.getItem('path') ?? '');
 
-  sessionStorage.setItem('path', btoa(path));
+  sessionStorage.setItem('path', path);
 
   return (
     <div className={cls('App')}>
