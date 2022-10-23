@@ -9,14 +9,16 @@ import { useState } from 'react';
 const cls = classListBuilder(styles);
 
 const App = () => {
-  const [path, setPath] = useState("");
+  const [path, setPath] = useState(atob(sessionStorage.getItem('path') ?? ''));
 
-    return (
-        <div className={cls('App')}>
-          <UploadForm path={path} />
-          <FileList path={path} setPath={setPath} />
-        </div>
-    );
+  sessionStorage.setItem('path', btoa(path));
+
+  return (
+    <div className={cls('App')}>
+      <UploadForm path={path} />
+      <FileList path={path} setPath={setPath} />
+    </div>
+  );
 };
 
 export default App;
