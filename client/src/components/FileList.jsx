@@ -94,7 +94,7 @@ const FileList = ({path, setPath}) => {
   const { files, folders } = data;
   return (
     <div className={cls("file-view")}>
-      {path.length > 0 ? (
+      {path.length > 0 && path !== '.' ? (
         <Folder
           key="folder-back"
           name="back"
