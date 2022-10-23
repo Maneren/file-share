@@ -56,7 +56,7 @@ app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
 const { formatBytes, getFolderContents } = require('./utils');
-app.post('/upload', ({ files }, res) => {
+app.post('/upload', ({ files, body: { targetPath } }, res) => {
   try {
     if (!files) {
       const error = 'No files uploaded';
@@ -69,7 +69,7 @@ app.post('/upload', ({ files }, res) => {
 
       console.log(name, formatBytes(file.size));
 
-      file.mv(path.join(sharedFolder, name));
+      file.mv(path.join(sharedFolder, targetPath, name));
     }
 
     res.send({});

@@ -24,13 +24,12 @@ const Error = ({ error, onClick }) => (
   </Modal>
 );
 
-const FileList = () => {
+const FileList = ({path, setPath}) => {
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState([false, false]);
 
   const pathModule = require("path-browserify");
 
-  const [path, setPath] = useState("");
   const [data, setData] = useState(null);
   const [loadState, setLoadState] = useState({ loading: false, loaded: false });
 

@@ -22,7 +22,7 @@ const formatBytes = (bytes, precision = 3) => {
   return `${number} ${unit}`;
 };
 
-const UploadForm = () => {
+const UploadForm = ({ path }) => {
   const [files, setFiles] = useState({});
 
   const [uploadStats, setUploadStats] = useState({
@@ -42,8 +42,13 @@ const UploadForm = () => {
 
     const formData = new window.FormData();
     for (const file of files) formData.append(file.name, file);
+    formData.append('targetPath', path);
 
     const start = Date.now();
+
+    const onUploadProgress = ({ total, loaded }) => {
+      total === loaded ? setUploadStats({ total: 0, loaded: 0, start }) : setUploadStats({ total, loaded, start });
+    };
 
     axios
       .request({
@@ -51,8 +56,7 @@ const UploadForm = () => {
         url: '/upload',
         data: formData,
         headers: { accept: 'application/json' },
-        onUploadProgress: p =>
-          setUploadStats({ total: p.total, loaded: p.loaded, start })
+        onUploadProgress
       })
       .then(response => {
         // TODO: handle upload response
