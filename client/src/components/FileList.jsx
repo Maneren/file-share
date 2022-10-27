@@ -70,6 +70,13 @@ const FileList = ({ path, setPath }) => {
         setData(data);
         setShowError([false, false]);
         setLoadState({ loading: false, loaded: true });
+      })
+      .catch(({ response: { status } }) => {
+        if (status === 404) {
+          setPath(pathModule.dirname(path));
+          window.location.reload();
+          return null;
+        }
       });
   }
 
