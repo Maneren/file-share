@@ -90,9 +90,10 @@ app.get('/list', async ({ query }, res) => {
       return res.status(301).send(error);
     }
 
-    const folder = await fs.promises.realpath(path.join(sharedFolder, queryPath));
-
-    if (!fs.existsSync(folder)) {
+    let folder;
+    try {
+      folder = await fs.promises.realpath(path.join(sharedFolder, queryPath));
+    } catch(e) {
       const error = 'Folder does not exist';
       console.error(error);
       return res.status(404).send(error);
