@@ -56,7 +56,7 @@ app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
 const { formatBytes, getFolderContents } = require('./utils');
-app.post('/upload', ({ files }, res) => {
+app.post('/upload', ({ files, body: { targetPath } }, res) => {
   try {
     if (!files) {
       const error = 'No files uploaded';
@@ -69,7 +69,7 @@ app.post('/upload', ({ files }, res) => {
 
       console.log(name, formatBytes(file.size));
 
-      file.mv(path.join(sharedFolder, name));
+      file.mv(path.join(sharedFolder, targetPath, name));
     }
 
     res.send({});
@@ -90,9 +90,10 @@ app.get('/list', async ({ query }, res) => {
       return res.status(301).send(error);
     }
 
-    const folder = fs.realpathSync(path.join(sharedFolder, queryPath));
-
-    if (!fs.existsSync(folder)) {
+    let folder;
+    try {
+      folder = await fs.promises.realpath(path.join(sharedFolder, queryPath));
+    } catch(e) {
       const error = 'Folder does not exist';
       console.error(error);
       return res.status(404).send(error);

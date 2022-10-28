@@ -12,7 +12,7 @@ const formatBytes = (bytes, precision = 3) => {
   precision = Math.max(0, precision);
 
   const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
 
   const i = Math.floor(Math.log(bytes) / Math.log(k)); // = floor(log_k(bytes))
 
@@ -22,28 +22,33 @@ const formatBytes = (bytes, precision = 3) => {
   return `${number} ${unit}`;
 };
 
-const UploadForm = () => {
+const UploadForm = ({ path }) => {
   const [files, setFiles] = useState({});
 
   const [uploadStats, setUploadStats] = useState({
     total: 0,
     loaded: 0,
-    start: Date.now(),
+    start: Date.now()
   });
 
-  const handleFileChange = e => {
+  const handleFileChange = (e) => {
     setFiles(e.target.files);
   };
 
   const { start } = uploadStats;
 
-  const handleFormSubmit = async e => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new window.FormData();
     for (const file of files) formData.append(file.name, file);
+    formData.append('targetPath', path);
 
     const start = Date.now();
+
+    const onUploadProgress = ({ total, loaded }) => {
+      total === loaded ? setUploadStats({ total: 0, loaded: 0, start }) : setUploadStats({ total, loaded, start });
+    };
 
     axios
       .request({
@@ -51,10 +56,9 @@ const UploadForm = () => {
         url: '/upload',
         data: formData,
         headers: { accept: 'application/json' },
-        onUploadProgress: p =>
-          setUploadStats({ total: p.total, loaded: p.loaded, start })
+        onUploadProgress
       })
-      .then(response => {
+      .then((response) => {
         // TODO: handle upload response
       });
   };
@@ -69,29 +73,21 @@ const UploadForm = () => {
             Upload:
           </Form.Label>
           <Col sm='8'>
-            <Form.Control
-              type='file'
-              name='uploads'
-              multiple
-              className={cls('input')}
-              onChange={handleFileChange}
-            />
+            <Form.Control type='file' name='uploads' multiple className={cls('input')} onChange={handleFileChange} />
           </Col>
           <Col sm='2'>
             <Form.Control type='submit' value='Upload' />
           </Col>
         </Form.Group>
       </form>
-      {total > 0
-        ? (
-          <div className={cls('progress-container')}>
-            <p>
-              Upload: {formatBytes(loaded)} of {formatBytes(total)} ({formatBytes(speed)}/s)
-            </p>
-            <progress className={cls('progress')} value={loaded} max={total} />
-          </div>
-          )
-        : null}
+      {total > 0 ? (
+        <div className={cls('progress-container')}>
+          <p>
+            Upload: {formatBytes(loaded)} of {formatBytes(total)} ({formatBytes(speed)}/s)
+          </p>
+          <progress className={cls('progress')} value={loaded} max={total} />
+        </div>
+      ) : null}
     </>
   );
 };

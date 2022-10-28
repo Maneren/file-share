@@ -1,12 +1,12 @@
-import styles from "./FileList.module.css";
-import { File, Folder } from "./Item";
+import styles from './FileList.module.css';
+import { File, Folder } from './Item';
 
-import axios from "axios";
-import { useState } from "react";
+import axios from 'axios';
+import { useState } from 'react';
 
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal } from 'react-bootstrap';
 
-import { sleep } from '@maneren/utils/general'
+import { sleep } from '@maneren/utils/general';
 import { classListBuilder } from '@maneren/utils/react';
 const cls = classListBuilder(styles);
 
@@ -17,20 +17,19 @@ const Error = ({ error, onClick }) => (
     </Modal.Header>
     <Modal.Body>Error while fetching remote files: {error}</Modal.Body>
     <Modal.Footer>
-      <Button variant="primary" onClick={onClick}>
+      <Button variant='primary' onClick={onClick}>
         Dismiss
       </Button>
     </Modal.Footer>
   </Modal>
 );
 
-const FileList = () => {
+const FileList = ({ path, setPath }) => {
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState([false, false]);
 
-  const pathModule = require("path-browserify");
+  const pathModule = require('path-browserify');
 
-  const [path, setPath] = useState("");
   const [data, setData] = useState(null);
   const [loadState, setLoadState] = useState({ loading: false, loaded: false });
 
@@ -45,7 +44,7 @@ const FileList = () => {
 
     axios
       .request(`/list?path=${pathString}`, {
-        headers: { accept: "application/json" },
+        headers: { accept: 'application/json' }
       })
       .then(async (response) => {
         const { data } = response;
@@ -57,9 +56,7 @@ const FileList = () => {
           setShowError([true, true]);
           setLoadState({ loading: false, loaded: true });
 
-          return (
-            <Error error={error} onClick={() => setShowError([false, true])} />
-          );
+          return <Error error={error} onClick={() => setShowError([false, true])} />;
         }
 
         const { files, folders } = data;
@@ -73,20 +70,26 @@ const FileList = () => {
         setData(data);
         setShowError([false, false]);
         setLoadState({ loading: false, loaded: true });
+      })
+      .catch(({ response: { status } }) => {
+        if (status === 404) {
+          setPath(pathModule.dirname(path));
+          window.location.reload();
+          return null;
+        }
       });
   }
 
-  if (loading || !loaded) return "Loading...";
+  if (loading || !loaded) return 'Loading...';
 
   const [show, shown] = showError;
 
-  if (show) console.log("error");
-  if (show)
-    return <Error error={error} onClick={() => setShowError([false, true])} />;
+  if (show) console.log('error');
+  if (show) return <Error error={error} onClick={() => setShowError([false, true])} />;
   if (shown) return `Error: ${error}`;
 
   const folderClickHandler = (name, back) => {
-    const newPath = back ? pathModule.dirname : pathModule.join(path, name);
+    const newPath = back ? pathModule.dirname(path) : pathModule.join(path, name);
 
     setPath(newPath);
     setLoadState({ loading: false, loaded: false });
@@ -94,32 +97,23 @@ const FileList = () => {
 
   const { files, folders } = data;
   return (
-    <div className={cls("file-view")}>
-      {path.length > 0 ? (
-        <Folder
-          key="folder-back"
-          name="back"
-          icon="back"
-          onClick={() => folderClickHandler("back", true)}
-        />
+    <div className={cls('file-view')}>
+      {path.length > 0 && path !== '.' ? (
+        <Folder key='folder-back' name='back' icon='back' onClick={() => folderClickHandler('back', true)} />
       ) : null}
 
       {folders.map((name) => (
         <Folder
           key={`folder-${name}`}
           name={name}
-          icon="folder"
+          icon='folder'
           onClick={() => folderClickHandler(name, false)}
           path={path}
         />
       ))}
 
       {files.map((name) => (
-        <File
-          key={`file-${name}`}
-          name={name}
-          path={pathModule.join(path, name)}
-        />
+        <File key={`file-${name}`} name={name} path={pathModule.join(path, name)} />
       ))}
     </div>
   );
