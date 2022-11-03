@@ -29,4 +29,8 @@ async function getFolderContents(folder) {
   return { files, folders };
 }
 
-module.exports = { getFolderContents, formatBytes };
+function checkPathIsSafe(path) {
+  return ! path.split('/').includes('..');
+}
+
+module.exports = { getFolderContents, formatBytes, checkPathIsSafe };
