@@ -55,7 +55,7 @@ app.use(require('morgan')('dev'));
 app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
-const { formatBytes, getFolderContents } = require('./utils');
+const { formatBytes, getFolderContents, checkPathIsSafe } = require('./utils');
 app.post('/upload', ({ files, body: { targetPath } }, res) => {
   try {
     if (!files) {
@@ -69,7 +69,13 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
 
       console.log(name, formatBytes(file.size));
 
-      file.mv(path.join(sharedFolder, targetPath, name));
+      if (!checkPathIsSafe(name)) {
+        file.mv(path.join(sharedFolder, targetPath, name));
+      } else {
+        const error = `Forbidden path: ${queryPath} `;
+        console.error(error);
+        return res.status(301).send(error);
+      }
     }
 
     res.send({});
@@ -84,7 +90,7 @@ app.get('/list', async ({ query }, res) => {
     const queryPath = atob(query.path); // decode base64
     console.log(`query: ${queryPath}`);
 
-    if (queryPath.includes('..')) {
+    if (!checkPathIsSafe(queryPath)) {
       const error = `Forbidden path: ${queryPath}`;
       console.error(error);
       return res.status(301).send(error);
