@@ -6,7 +6,8 @@
     "start": "node app.js",
     "install-app": "pnpm -Pr install --prefer-frozen-lockfile && pnpm build",
     "dev": "nodemon app.js -- -d",
-    "build": "pnpm -C client build"
+    "build": "pnpm -C client build",
+    "format": "prettier --write \"*.js\" && eslint --fix *.js && pnpm -C client format"
   },
   "dependencies": {
     "@maneren/utils": "^6.3.1",
