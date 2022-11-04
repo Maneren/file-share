@@ -117,7 +117,7 @@ app.get('/list', async ({ query }, res) => {
 console.log(`Using folder: ${sharedFolder}`);
 
 if (argv.dev) {
-  const port = 5000;
+  const port = argv.port ?? 5000;
   app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
 } else {
   const port = argv.port ?? 0; // port 0 = OS chooses random free port
