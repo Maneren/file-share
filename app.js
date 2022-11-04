@@ -61,7 +61,7 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
     if (!files) {
       const error = 'No files uploaded';
       console.error(error);
-      return res.send({ error });
+      return res.status(400).send(error);
     }
 
     for (const name in files) {
@@ -72,16 +72,16 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
       if (!pathIsSafe(name)) {
         const error = `Forbidden path: ${targetPath} `;
         console.error(error);
-        return res.status(301).send(error);
+        return res.status(401).send(error);
       }
 
       file.mv(path.join(sharedFolder, targetPath, name));
     }
 
-    res.send({});
+    res.send();
   } catch (err) {
     console.error(err);
-    res.send({ error: 'Internal error' });
+    res.status(500).send('Internal error');
   }
 });
 
@@ -93,7 +93,7 @@ app.get('/list', async ({ query }, res) => {
     if (!pathIsSafe(queryPath)) {
       const error = `Forbidden path: ${queryPath}`;
       console.error(error);
-      return res.status(301).send(error);
+      return res.status(401).send(error);
     }
 
     let folder;
@@ -107,7 +107,7 @@ app.get('/list', async ({ query }, res) => {
 
     const { files, folders } = await getFolderContents(folder);
 
-    res.send({ files, folders });
+    res.type('json').send({ files, folders });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal error');
@@ -128,7 +128,7 @@ if (argv.dev) {
     const interfaces = require('os').networkInterfaces();
     const interfacesNames = Object.keys(interfaces);
 
-    let ip = null;
+    let ip = null, interface = null;
     for (const keyword of ['e', 'w', 'lan', 'tun', '[^(lo)]', '.+']) {
       const name = interfacesNames.find((ifc) =>
         ifc.match(new RegExp(`^${keyword}`))
@@ -136,6 +136,7 @@ if (argv.dev) {
 
       if (name) {
         ip = interfaces[name][0].address;
+        interface = name;
         break;
       }
     }
@@ -145,7 +146,7 @@ if (argv.dev) {
       process.exit(1);
     }
 
-    const address = `http://${ip}:${port}`;
+    const address = `http://${ip}:${port} on interface ${interface}`;
 
     if (argv.qr) require('qrcode-terminal').generate(address, { small: true });
 
