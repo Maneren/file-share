@@ -55,7 +55,7 @@ app.use(require('morgan')('dev'));
 app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
-const { formatBytes, getFolderContents, checkPathIsSafe } = require('./utils');
+const { formatBytes, getFolderContents, pathIsSafe } = require('./utils');
 app.post('/upload', ({ files, body: { targetPath } }, res) => {
   try {
     if (!files) {
@@ -69,13 +69,13 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
 
       console.log(name, formatBytes(file.size));
 
-      if (!checkPathIsSafe(name)) {
-        file.mv(path.join(sharedFolder, targetPath, name));
-      } else {
-        const error = `Forbidden path: ${queryPath} `;
+      if (!pathIsSafe(name)) {
+        const error = `Forbidden path: ${targetPath} `;
         console.error(error);
         return res.status(301).send(error);
       }
+
+      file.mv(path.join(sharedFolder, targetPath, name));
     }
 
     res.send({});
@@ -90,7 +90,7 @@ app.get('/list', async ({ query }, res) => {
     const queryPath = atob(query.path); // decode base64
     console.log(`query: ${queryPath}`);
 
-    if (!checkPathIsSafe(queryPath)) {
+    if (!pathIsSafe(queryPath)) {
       const error = `Forbidden path: ${queryPath}`;
       console.error(error);
       return res.status(301).send(error);
@@ -99,7 +99,7 @@ app.get('/list', async ({ query }, res) => {
     let folder;
     try {
       folder = await fs.promises.realpath(path.join(sharedFolder, queryPath));
-    } catch(e) {
+    } catch (e) {
       const error = 'Folder does not exist';
       console.error(error);
       return res.status(404).send(error);
