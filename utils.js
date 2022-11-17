@@ -22,11 +22,15 @@ async function getFolderContents(folder) {
     .filter((stat) => stat.isFile() || stat.isDirectory())
     .partition((stat) => stat.isFile());
 
-  const [files, folders] = [fileStats, folderStats].map(
-    (entries) => entries.map((entry) => entry.name)
+  const [files, folders] = [fileStats, folderStats].map((entries) =>
+    entries.map((entry) => entry.name)
   );
 
   return { files, folders };
 }
 
-module.exports = { getFolderContents, formatBytes };
+function pathIsSafe(path) {
+  return !path.split('/').includes('..');
+}
+
+module.exports = { getFolderContents, formatBytes, pathIsSafe };

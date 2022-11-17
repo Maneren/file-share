@@ -6,26 +6,26 @@
     "start": "node app.js",
     "install-app": "pnpm -Pr install --prefer-frozen-lockfile && pnpm build",
     "dev": "nodemon app.js -- -d",
-    "build": "pnpm -C client build"
+    "build": "pnpm -C client build",
+    "format": "prettier --write \"*.js\" && eslint --fix *.js && pnpm -C client format"
   },
   "dependencies": {
-    "@maneren/utils": "^6.4.1",
+    "@maneren/utils": "^6.5.0",
     "argparse": "^2.0.1",
     "cors": "^2.8.5",
-    "express": "^4.18.1",
+    "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "morgan": "^1.10.0",
     "qrcode-terminal": "^0.12.0"
   },
   "devDependencies": {
-    "eslint": "^8.23.0",
+    "eslint": "^8.26.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-n": "^15.4.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.1",
-    "nodemon": "^2.0.19",
-    "prettier": "^2.7.1",
-    "semistandard": "^16.0.1"
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.7.1"
   }
 }

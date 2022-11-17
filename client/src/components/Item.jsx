@@ -3,7 +3,7 @@ import { getIcon, icons } from "../assets/icons";
 
 import { Ratio } from "react-bootstrap";
 
-import { classListBuilder } from '@maneren/utils/react';
+import { classListBuilder } from "@maneren/utils/react";
 const cls = classListBuilder(styles);
 
 const getExtension = (filename) => filename.toLowerCase().split(".").pop();

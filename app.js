@@ -34,8 +34,10 @@ const clientFolder = path.join(__dirname, 'client');
 const buildFolder = path.join(clientFolder, 'build');
 
 if (
-  !fs.existsSync(buildFolder) ||
-  !fs.readdirSync(buildFolder).includes('index.html')
+  !(
+    fs.existsSync(buildFolder) &&
+    fs.readdirSync(buildFolder).includes('index.html')
+  )
 ) {
   console.log(
     `Couldn't find index.html. Try rebuilding the client in ${clientFolder}`
@@ -55,13 +57,13 @@ app.use(require('morgan')('dev'));
 app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
 
-const { formatBytes, getFolderContents } = require('./utils');
+const { formatBytes, getFolderContents, pathIsSafe } = require('./utils');
 app.post('/upload', ({ files, body: { targetPath } }, res) => {
   try {
     if (!files) {
       const error = 'No files uploaded';
       console.error(error);
-      return res.send({ error });
+      return res.status(400).send(error);
     }
 
     for (const name in files) {
@@ -69,13 +71,19 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
 
       console.log(name, formatBytes(file.size));
 
+      if (!pathIsSafe(name)) {
+        const error = `Forbidden path: ${targetPath} `;
+        console.error(error);
+        return res.status(401).send(error);
+      }
+
       file.mv(path.join(sharedFolder, targetPath, name));
     }
 
-    res.send({});
+    res.send();
   } catch (err) {
     console.error(err);
-    res.send({ error: 'Internal error' });
+    res.status(500).send('Internal error');
   }
 });
 
@@ -84,16 +92,16 @@ app.get('/list', async ({ query }, res) => {
     const queryPath = atob(query.path); // decode base64
     console.log(`query: ${queryPath}`);
 
-    if (queryPath.includes('..')) {
+    if (!pathIsSafe(queryPath)) {
       const error = `Forbidden path: ${queryPath}`;
       console.error(error);
-      return res.status(301).send(error);
+      return res.status(401).send(error);
     }
 
     let folder;
     try {
       folder = await fs.promises.realpath(path.join(sharedFolder, queryPath));
-    } catch(e) {
+    } catch (e) {
       const error = 'Folder does not exist';
       console.error(error);
       return res.status(404).send(error);
@@ -101,7 +109,7 @@ app.get('/list', async ({ query }, res) => {
 
     const { files, folders } = await getFolderContents(folder);
 
-    res.send({ files, folders });
+    res.type('json').send({ files, folders });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal error');
@@ -111,7 +119,7 @@ app.get('/list', async ({ query }, res) => {
 console.log(`Using folder: ${sharedFolder}`);
 
 if (argv.dev) {
-  const port = 5000;
+  const port = argv.port ?? 5000;
   app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
 } else {
   const port = argv.port ?? 0; // port 0 = OS chooses random free port
@@ -123,6 +131,7 @@ if (argv.dev) {
     const interfacesNames = Object.keys(interfaces);
 
     let ip = null;
+    let interface = null;
     for (const keyword of ['e', 'w', 'lan', 'tun', '[^(lo)]', '.+']) {
       const name = interfacesNames.find((ifc) =>
         ifc.match(new RegExp(`^${keyword}`))
@@ -130,6 +139,7 @@ if (argv.dev) {
 
       if (name) {
         ip = interfaces[name][0].address;
+        interface = name;
         break;
       }
     }
@@ -139,7 +149,7 @@ if (argv.dev) {
       process.exit(1);
     }
 
-    const address = `http://${ip}:${port}`;
+    const address = `http://${ip}:${port} on interface ${interface}`;
 
     if (argv.qr) require('qrcode-terminal').generate(address, { small: true });
 

@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-const path = require('path');
-process.env.NODE_PATH = path.join(__dirname, '..');
-require(path.join(__dirname, '../app.js'));
+const path = require("path");
+process.env.NODE_PATH = path.join(__dirname, "..");
+require(path.join(__dirname, "../app.js"));
