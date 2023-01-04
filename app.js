@@ -149,10 +149,10 @@ if (argv.dev) {
       process.exit(1);
     }
 
-    const address = `http://${ip}:${port} on interface ${interface}`;
+    const address = `http://${ip}:${port}`;
 
     if (argv.qr) require('qrcode-terminal').generate(address, { small: true });
 
-    console.log(`Listening at ${address}`);
+    console.log(`Listening at ${address} on interface ${interface}`);
   });
 }
