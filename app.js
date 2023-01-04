@@ -52,7 +52,7 @@ app.use(
   })
 );
 app.use(require('cors')());
-app.use(require('morgan')('dev'));
+app.use(require('morgan')('prod'));
 
 app.use('/', express.static(buildFolder));
 app.use('/files', express.static(sharedFolder, { dotfiles: 'allow' }));
