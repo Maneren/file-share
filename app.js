@@ -131,7 +131,7 @@ if (argv.dev) {
     const interfacesNames = Object.keys(interfaces);
 
     let ip = null;
-    let interface = null;
+    let choosenInterface = null;
     for (const keyword of ['e', 'w', 'lan', 'tun', '[^(lo)]', '.+']) {
       const name = interfacesNames.find((ifc) =>
         ifc.match(new RegExp(`^${keyword}`))
@@ -139,7 +139,7 @@ if (argv.dev) {
 
       if (name) {
         ip = interfaces[name][0].address;
-        interface = name;
+        choosenInterface = name;
         break;
       }
     }
@@ -153,6 +153,6 @@ if (argv.dev) {
 
     if (argv.qr) require('qrcode-terminal').generate(address, { small: true });
 
-    console.log(`Listening at ${address} on interface ${interface}`);
+    console.log(`Listening at ${address} on interface ${choosenInterface}`);
   });
 }
