@@ -69,15 +69,17 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
     for (const name in files) {
       const file = files[name];
 
+      let target = path.join(sharedFolder, targetPath, name);
+
       console.log(name, formatBytes(file.size));
 
-      if (!pathIsSafe(name)) {
+      if (!pathIsSafe(target)) {
         const error = `Forbidden path: ${targetPath} `;
         console.error(error);
         return res.status(401).send(error);
       }
 
-      file.mv(path.join(sharedFolder, targetPath, name));
+      file.mv(target);
     }
 
     res.send();
