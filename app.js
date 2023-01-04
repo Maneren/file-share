@@ -66,6 +66,12 @@ app.post('/upload', ({ files, body: { targetPath } }, res) => {
       return res.status(400).send(error);
     }
 
+    if (!targetPath) {
+      const error = 'No target path supplied';
+      console.error(error);
+      return res.status(400).send(error);
+    }
+
     for (const name in files) {
       const file = files[name];
 
