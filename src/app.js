@@ -30,7 +30,7 @@ if (!fs.existsSync(argv.folder)) {
 }
 
 const sharedFolder = fs.realpathSync(argv.folder);
-const clientFolder = path.join(__dirname, "client");
+const clientFolder = path.join(__dirname, "..", "client");
 const buildFolder = path.join(clientFolder, "build");
 
 if (
@@ -132,8 +132,8 @@ if (argv.dev) {
 } else {
 	const port = argv.port ?? 0; // port 0 = OS chooses random free port
 
-	app.listen(port, server => {
-		const { port } = server.address();
+	const _server = app.listen(port, () => {
+		const { port } = _server.address();
 
 		const interfaces = require("os").networkInterfaces();
 		const interfacesNames = Object.keys(interfaces);
