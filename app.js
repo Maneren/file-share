@@ -75,7 +75,7 @@ app.post("/upload", ({ files, body: { targetPath } }, res) => {
 		for (const name in files) {
 			const file = files[name];
 
-			let target = path.join(sharedFolder, targetPath, name);
+			const target = path.join(sharedFolder, targetPath, name);
 
 			console.log(name, formatBytes(file.size));
 
@@ -109,7 +109,7 @@ app.get("/list", async ({ query }, res) => {
 		let folder;
 		try {
 			folder = await fs.promises.realpath(path.join(sharedFolder, queryPath));
-		} catch (e) {
+		} catch (_) {
 			const error = "Folder does not exist";
 			console.error(error);
 			return res.status(404).send(error);
@@ -132,7 +132,7 @@ if (argv.dev) {
 } else {
 	const port = argv.port ?? 0; // port 0 = OS chooses random free port
 
-	const server = app.listen(port, () => {
+	app.listen(port, server => {
 		const { port } = server.address();
 
 		const interfaces = require("os").networkInterfaces();
