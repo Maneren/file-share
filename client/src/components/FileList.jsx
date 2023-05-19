@@ -35,7 +35,7 @@ const FileList = ({ path, setPath }) => {
 
   const { loading, loaded } = loadState;
 
-  if (!loading && !loaded) {
+  if (!(loading || loaded)) {
     setLoadState({ loading: true, loaded: false });
 
     const start = Date.now();
@@ -63,7 +63,7 @@ const FileList = ({ path, setPath }) => {
 
         const { files, folders } = data;
 
-        if (!files || !folders) return;
+        if (!(files && folders)) return;
 
         if (Date.now() - start < 500) {
           await sleep(200);

@@ -2,7 +2,7 @@ import { ReactUtils } from "@maneren/utils";
 
 const icons = ReactUtils.importAll(
   require.context("./icons", false, /\.svg$/),
-  false
+  false,
 );
 
 const additional = {

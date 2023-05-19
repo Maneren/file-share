@@ -23,7 +23,7 @@ async function getFolderContents(folder) {
     .partition((stat) => stat.isFile());
 
   const [files, folders] = [fileStats, folderStats].map((entries) =>
-    entries.map((entry) => entry.name)
+    entries.map((entry) => entry.name),
   );
 
   return { files, folders };
