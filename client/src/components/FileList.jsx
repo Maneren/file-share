@@ -75,9 +75,11 @@ const FileList = ({ path, setPath }) => {
       })
       .catch(({ response: { status } }) => {
         if (status === 404) {
-          setPath(pathModule.dirname(path));
-          window.location.reload();
-          return null;
+          setTimeout(500, () => {
+            setPath(pathModule.dirname(path));
+            window.location.reload();
+            return null;
+          });
         }
       });
   }
